@@ -1,0 +1,36 @@
+server {
+	listen ${FRONTEND_INTERNAL_PORT} default_server;
+	listen [::]:${FRONTEND_INTERNAL_PORT} default_server;
+	server_name ${FRONTEND_DOMAIN};
+
+	root /usr/share/nginx/html;
+	index index.html;
+
+	location / {
+		try_files $uri $uri/ /index.html;
+	}
+
+	# Hashed assets can be cached forever.
+	location /assets/ {
+		try_files $uri =404;
+		add_header Cache-Control "public, max-age=31536000, immutable";
+	}
+
+	# Service workers and the page shell must not be cached aggressively.
+	location = /index.html {
+		add_header Cache-Control "no-cache";
+	}
+
+	location = /sw.js {
+		add_header Cache-Control "no-cache";
+		add_header Service-Worker-Allowed "/";
+	}
+
+	location = /controller.sw.js {
+		add_header Cache-Control "no-cache";
+	}
+
+	location = /localcontrollersw.js {
+		add_header Cache-Control "no-cache";
+	}
+}

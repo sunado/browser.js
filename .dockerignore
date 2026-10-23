@@ -1,0 +1,19 @@
+# Build outputs and installed dependencies are produced inside the image.
+**/node_modules
+**/dist
+**/*.tgz
+**/.turbo
+dist
+
+# Not needed for the build steps from .github/workflows/main.yml.
+.git
+external/playwright
+
+# Rewriter output is rebuilt with a BuildKit cache mount. Excluding `out`
+# also prevents a stale .build-hash from skipping the Rust compilation.
+packages/scramjet/packages/core/rewriter/target
+packages/scramjet/packages/core/rewriter/wasm/out
+
+# Local caches/editor noise.
+**/.DS_Store
+**/*.log
